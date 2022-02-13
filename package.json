@@ -4,7 +4,9 @@
     "discord.js": "^12.5.3",
     "discord.js-buttons": "^1.0.0",
     "fs": "^0.0.1-security",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "parse-ms": "^2.1.0",
+    "pretty-ms": "^7.0.1"
   },
   "name": "replica-do-counting",
   "version": "1.0.0",
