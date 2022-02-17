@@ -6,6 +6,7 @@
      const {token, prefix, apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId, appId} = require("./config.json")
 const colors = require('colors')
 const firebase = require('firebase');
+const { number } = require("yargs")
 var Configf = {
 	apiKey: apiKey,
 	authDomain: authDomain,
@@ -34,6 +35,9 @@ const database = firebase.database();
 
              bot.on("ready", () => {
            console.log("Yep!")
+          setInterval(() => {
+            bot.user.setActivity({name: "c.help | "+bot.guilds.cache.size.toLocaleString()+" Servers"})
+             }, 10000)
           })
 
           bot.on("message", async message => {   
@@ -55,19 +59,45 @@ const database = firebase.database();
           })
           
           bot.on("message", async message => {
-             chatID = await database.ref("Servidores/"+message.guild.id+"/channel").once("value").val()
+            if (message.channel.type === 'dm') return;
+            if (message.author.bot) return;
+             chatID1 = await database.ref("Servidores/"+message.guild.id+"/channel").once("value")
+             chatID = chatID1.val()
             if(!chatID) chatID = "n"
-            console.log(chatID)
-            if(chatID === "n"){console.log("a")}else{
-              if(bot.guilds.cache.get(message.guild.id).channels.cache.get(chatID.id)){
-                console.log("a")
-                svnumber = await database.ref("Servidores/"+message.guild.id+"/number").val()
-                if(!svnumber) svnumber = 0
-                chatnumber = message.content+svnumber
-                number = svnumber+1
-                if(chatnumber === svnumber) {}else{message.channel.send("<@"+message.author+"> você acabou de ferrar com tudo em **"+svnumber+"**!")}
-              }
-            }
+            if(chatID === "n"){}else{
+              if(message.channel.id === chatID.id){
+                svnumber1 = await database.ref("Servidores/"+message.guild.id+"/number").once("value")
+                svnumber = svnumber1.val()
+                if(!svnumber) svnumber = "1"
+                if(!svnumber === "1") svnumber = svnumber1.val().number
+                chatnumber2 = message.content
+                chatnumber = chatnumber2
+                number5 = svnumber
+                modnum1 = await database.ref("Servidores/"+message.guild.id+"/modo").once("value")
+                modnum3 = modnum1.val()?modnum1.val().modo:"n"
+
+                //console.log(number5+" - "+chatnumber2+" - "+svnumber)
+                if(chatnumber2 === ""+(svnumber1.val()?svnumber1.val().number:"1")+"") {
+                  database.ref("Servidores/"+message.guild.id+"/number").update({number: ""+(Number((svnumber1.val()?svnumber1.val().number:"1"))+1)+""})
+                  message.react("✅")
+                  database.ref("Servidores/"+message.guild.id+"/user").update({user: message.author.id})
+                }else{
+                  if(modnum3 === "n") {
+                    if(Number(message.content)){
+                    database.ref("Servidores/"+message.guild.id+"/number").update({number: "1"})
+                    message.react("❌")
+                      return  message.channel.send("<@"+message.author+"> você acabou de ferrar com tudo em **"+(svnumber1.val()?(svnumber1.val().number-1):"1")+"**!\n> O proximo Número e **1**.")      
+                  }
+                } 
+                  if(modnum3 === "s") {
+                    database.ref("Servidores/"+message.guild.id+"/number").update({number: "1"})
+                    message.react("❌")
+                      return  message.channel.send("<@"+message.author+"> você acabou de ferrar com tudo em **"+(svnumber1.val()?(svnumber1.val().number-1):"1")+"**!\n> O proximo Número e **1**.")
+      
+                  }
+                  }
+                }
+              }  
           })
 
           bot.login(token)
