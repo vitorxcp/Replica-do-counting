@@ -22,5 +22,5 @@ const firebase = require("firebase")
 }
 exports.info = {
     nome: "server", 
-    aliases: ["sv"]
+    aliases: ["sv", "info"]
 }

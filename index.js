@@ -77,7 +77,15 @@ const database = firebase.database();
                 modnum3 = modnum1.val()?modnum1.val().modo:"n"
 
                 //console.log(number5+" - "+chatnumber2+" - "+svnumber)
+                let viriuser = await database.ref("Servidores/"+message.guild.id+"/user").once("value")
+                let verifuser = viriuser.val()?viriuser.val().user:"n"
                 if(chatnumber2 === ""+(svnumber1.val()?svnumber1.val().number:"1")+"") {
+                  if(verifuser === message.author.id) {
+                    database.ref("Servidores/"+message.guild.id+"/number").update({number: "1"})
+                    database.ref("Servidores/"+message.guild.id+"/user").update({user: "a"})
+                      message.react("❌")
+                        return  message.channel.send("<@"+message.author+"> você acabou de ferrar com tudo em **"+(svnumber1.val()?(svnumber1.val().number-1):"1")+"**! (Você não pode contar 2 números em sequencias)\n> O proximo Número e **1**.")      
+                  }
                   database.ref("Servidores/"+message.guild.id+"/number").update({number: ""+(Number((svnumber1.val()?svnumber1.val().number:"1"))+1)+""})
                   message.react("✅")
                   database.ref("Servidores/"+message.guild.id+"/user").update({user: message.author.id})
@@ -85,12 +93,14 @@ const database = firebase.database();
                   if(modnum3 === "n") {
                     if(Number(message.content)){
                     database.ref("Servidores/"+message.guild.id+"/number").update({number: "1"})
+                    database.ref("Servidores/"+message.guild.id+"/user").update({user: "a"})
                     message.react("❌")
                       return  message.channel.send("<@"+message.author+"> você acabou de ferrar com tudo em **"+(svnumber1.val()?(svnumber1.val().number-1):"1")+"**!\n> O proximo Número e **1**.")      
                   }
                 } 
                   if(modnum3 === "s") {
                     database.ref("Servidores/"+message.guild.id+"/number").update({number: "1"})
+                    database.ref("Servidores/"+message.guild.id+"/user").update({user: "a"})
                     message.react("❌")
                       return  message.channel.send("<@"+message.author+"> você acabou de ferrar com tudo em **"+(svnumber1.val()?(svnumber1.val().number-1):"1")+"**!\n> O proximo Número e **1**.")
       
